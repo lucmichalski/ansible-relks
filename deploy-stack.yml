@@ -1,0 +1,12 @@
+- hosts: elk
+  # remote_user:
+  become: yes
+  become_user: root
+  roles:
+    - { role: elasticsearch }
+    - { role: java }
+    - { role: kibana }
+    - { role: logstash }
+    - { role: maxmind }
+    - { role: redis }
+    - { role: suricata }

@@ -1,0 +1,28 @@
+---
+
+sudo: required
+
+language: python
+python: "3.8.1"
+
+env:
+  - ANSIBLE_VERSION=latest
+
+branches:
+  only:
+    - master
+
+before_install:
+  - wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+  - echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+  - sudo apt update -qq
+
+install:
+  - sudo apt-get install sshpass
+  - sudo apt install python-apt
+  - if [ "$ANSIBLE_VERSION" = "latest" ]; then pip install ansible; else pip install ansible==$ANSIBLE_VERSION; fi
+  - if [ "$ANSIBLE_VERSION" = "latest" ]; then pip install ansible-lint; fi
+
+script:
+  - ansible-playbook -i hosts deploy-stack.yml --syntax-check
+  - ansible-playbook -i hosts --connection=local --check deploy-stack.yml -vvvv

@@ -1,0 +1,16 @@
+---
+
+- apt_repository:
+  repo: ppa:oisf/suricata-stable
+
+- name: Install suricata
+  apt:
+    name: suricata
+    state: present
+
+- name: Start suricata
+  systemd:
+    name: suricata
+    daemon_reload: yes
+    state: started
+    enabled: yes

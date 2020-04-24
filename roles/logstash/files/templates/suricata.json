@@ -1,0 +1,76 @@
+{
+  "template" : "suricata-*",
+  "settings" : {
+    "index.refresh_interval" : "5s",
+    "number_of_replicas": 0,
+    "number_of_shards": 1
+},
+  "mappings" : {
+    "_default_" : {
+      "_all" : {"enabled" : false, "norms" : false},
+      "dynamic_templates" : [ {
+        "double_fields" : {
+          "match" : "*",
+          "match_mapping_type" : "double",
+          "mapping" : { "type" : "double"}
+        }
+      }, {
+        "long_fields" : {
+          "match" : "*",
+          "match_mapping_type" : "long",
+          "mapping" : { "type" : "long", "doc_values" : true }
+        }
+      }, {
+        "date_fields" : {
+          "match" : "*",
+          "match_mapping_type" : "date",
+          "mapping" : { "type" : "date", "doc_values" : true }
+        }
+      } ],
+      "properties" : {
+        "@timestamp" : { "type": "date", "doc_values" : true },
+        "@version" : { "type": "text", "index": false },
+        "dest" : {
+          "geo": {
+            "dynamic": true,
+            "properties": {
+              "ip": { "type": "ip" },
+              "location" : { "type" : "geo_point" },
+              "latitude" : { "type" : "half_float" },
+              "longitude" : { "type" : "half_float" }
+            }
+          },
+          "as": {
+            "dynamic": true,
+            "properties": {
+              "ip": { "type": "ip" },
+              "location" : { "type" : "geo_point" },
+              "latitude" : { "type" : "half_float" },
+              "longitude" : { "type" : "half_float" }
+            }
+          }
+        },
+        "src" : {
+          "geo": {
+            "dynamic": true,
+            "properties": {
+              "ip": { "type": "ip" },
+              "location" : { "type" : "geo_point" },
+              "latitude" : { "type" : "half_float" },
+              "longitude" : { "type" : "half_float" }
+            }
+          },
+          "as": {
+            "dynamic": true,
+            "properties": {
+              "ip": { "type": "ip" },
+              "location" : { "type" : "geo_point" },
+              "latitude" : { "type" : "half_float" },
+              "longitude" : { "type" : "half_float" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

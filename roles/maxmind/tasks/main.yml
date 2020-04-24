@@ -1,0 +1,32 @@
+---
+
+- apt_repository:
+    repo: ppa:maxmind/ppa
+
+- name: Install geoipupdate
+  apt:
+    name: geoipupdate
+    state: present
+
+- name: Configure GeoIP update
+  template:
+    src: 'GeoIP.conf.j2'
+    dest: /etc/GeoIP.conf
+    owner: root
+    group: root
+    mode: 0640
+
+- name: Download Maxmind dbs
+  shell:
+    cmd: geoipupdate -d /usr/share/GeoIP/
+
+- name: Creates a cron file under /etc/cron.d
+  cron:
+    name: geoip autoupdate
+    weekday: "7"
+    minute: "0"
+    hour: "17"
+    user: root
+    job: "geoipupdate -d /usr/share/GeoIP"
+    cron_file: ansible_geoip-autoupdate
+
